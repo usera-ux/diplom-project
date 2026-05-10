@@ -6,6 +6,7 @@ import OnboardingView3 from '../views/OnboardingView-3.vue'
 import OnboardingView4 from '../views/OnboardingView-4.vue'
 import OnboardingView5 from '../views/OnboardingView-5.vue'
 import Cataloguepage from '../views/Catalog/Cataloguepage.vue'
+import StoriesPage from '../views/Catalog/StoriesPage.vue'
 
 const routes = [
   { path: '/', name: 'splash', component: SplashView },
@@ -15,8 +16,8 @@ const routes = [
   { path: '/onboarding/4', name: 'onboarding-4', component: OnboardingView4 },
   { path: '/onboarding/5', name: 'onboarding-5', component: OnboardingView5 },
   { path: '/catalogue', name: 'catalogue', component: Cataloguepage },
-  { path: '/product/:id', name: 'product', component: ProductCard }
-
+  { path: '/product/:id', name: 'product', component: ProductCard },
+  { path: '/stories', name: 'stories', component: StoriesPage }
 ]
 
 export default createRouter({

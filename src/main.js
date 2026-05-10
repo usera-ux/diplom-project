@@ -11,6 +11,9 @@ import OnboardingView4 from './views/OnboardingView-4.vue'
 import OnboardingView5 from './views/OnboardingView-5.vue'
 import Cataloguepage from './views/Catalog/Cataloguepage.vue'
 import ProductCard from './components/ProductCard.vue'
+import StoriesPage from './views/Catalog/StoriesPage.vue'
+import { useCatalogueStore } from './stores/catalogueStore'
+import { supabase } from './services/supabase'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -22,7 +25,8 @@ const router = createRouter({
     { path: '/onboarding/4', component: OnboardingView4 },
     { path: '/onboarding/5', component: OnboardingView5 },
     { path: '/catalogue', component: Cataloguepage },
-    { path: '/product/:id', component: ProductCard }
+    { path: '/product/:id', component: ProductCard },
+    { path: '/stories', component: StoriesPage }
   ]
 })
 
