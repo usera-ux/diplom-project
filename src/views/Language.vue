@@ -151,7 +151,7 @@ const goBack = () => {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped >
 .coming {
   height: 100vh;
   background: #f8fafc;
@@ -159,59 +159,58 @@ const goBack = () => {
   flex-direction: column;
   justify-content: space-between;
   padding: 32px 20px calc(24px + env(safe-area-inset-bottom));
+}
 
-  &__content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
+.coming__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 
-  &__image {
-    width: 170px;
-    height: 170px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 28px;
+.coming__image {
+  width: 170px;
+  height: 170px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 28px;
+  animation: float 3s ease-in-out infinite;
+}
 
-    animation: float 3s ease-in-out infinite;
-  }
+.coming__title {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 30px;
+  color: #111827;
+  margin-bottom: 10px;
+  text-align: center;
+}
 
-  &__title {
-    font-size: 24px;
-    font-weight: 700;
-    line-height: 30px;
-    color: #111827;
-    margin-bottom: 10px;
-    text-align: center;
-  }
+.coming__text {
+  font-size: 15px;
+  line-height: 22px;
+  color: #6b7280;
+  text-align: center;
+  max-width: 260px;
+}
 
-  &__text {
-    font-size: 15px;
-    line-height: 22px;
-    color: #6b7280;
-    text-align: center;
-    max-width: 260px;
-  }
+.coming__button {
+  width: 100%;
+  height: 56px;
+  border: none;
+  border-radius: 18px;
+  background: #10b981;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
 
-  &__button {
-    width: 100%;
-    height: 56px;
-    border: none;
-    border-radius: 18px;
-    background: #10b981;
-    color: #fff;
-    font-size: 17px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.2s;
-
-    &:active {
-      transform: scale(0.98);
-    }
-  }
+.coming__button:active {
+  transform: scale(0.98);
 }
 
 @keyframes float {
