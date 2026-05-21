@@ -1,11 +1,26 @@
 <template>
-  <div class="catalogue">
 
+ <div v-if="store.loading" class="skeleton-grid">
+  <div v-for="i in 6" :key="i" class="skeleton-card"></div>
+</div>
+
+<div v-else class="catalogue">
+  <div class="catalogue">
     <!-- Header -->
     <div class="catalogue__header">
   <div style="width: 24px;" />   <!-- пустышка слева для баланса -->
   <h1 class="catalogue__title">Каталог</h1>
-  <button class="catalogue__bell">
+  <button class="catalogue__bell" @click="goToNotifications">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M11.25 12V1.5" stroke="#111D33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M8.25 4.5L11.25 1.5L14.25 4.5" stroke="#111D33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.25 12C18.3938 12.6862 19.3404 13.6569 19.9976 14.8177C20.6548 15.9784 21.0001 17.2896 21 18.6234V22.5" stroke="#111D33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M7.5 8.25H6C5.80109 8.25 5.61032 8.32902 5.46967 8.46967C5.32902 8.61032 5.25 8.80109 5.25 9V18.75" stroke="#111D33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M15.0897 22.5L13.0028 19.3125C12.7581 18.8821 12.6936 18.3723 12.8233 17.8945C12.953 17.4167 13.2665 17.0096 13.6953 16.762C14.1241 16.5144 14.6334 16.4465 15.1121 16.5731C15.5907 16.6996 15.9999 17.0104 16.2503 17.4375L17.2516 18.9666V9C17.2516 8.80109 17.1726 8.61032 17.0319 8.46967C16.8913 8.32902 16.7005 8.25 16.5016 8.25H15.0016" stroke="#111D33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+  </button>
+  <button class="catalogue__bell" @click="goToNotifications">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M9 21H15" stroke="#111D33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M5.2533 9.75C5.2533 7.95979 5.96446 6.2429 7.23033 4.97703C8.4962 3.71116 10.2131 3 12.0033 3C13.7935 3 15.5104 3.71116 16.7763 4.97703C18.0421 6.2429 18.7533 7.95979 18.7533 9.75C18.7533 13.1081 19.5314 15.8063 20.1502 16.875C20.2159 16.9888 20.2505 17.1179 20.2507 17.2493C20.2508 17.3808 20.2164 17.5099 20.1508 17.6239C20.0853 17.7378 19.991 17.8325 19.8774 17.8985C19.7637 17.9645 19.6347 17.9995 19.5033 18H4.5033C4.37203 17.9992 4.24327 17.964 4.12988 17.8978C4.0165 17.8317 3.92246 17.7369 3.85716 17.6231C3.79187 17.5092 3.75761 17.3801 3.75781 17.2489C3.75801 17.1176 3.79266 16.9887 3.8583 16.875C4.47611 15.8063 5.2533 13.1072 5.2533 9.75Z" stroke="#111D33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -44,7 +59,7 @@
     <!-- Заголовок секции + фильтр -->
     <div class="catalogue__section-header">
       <h2 class="catalogue__section-title">{{ activeCategoryName }}</h2>
-      <button class="catalogue__filter">
+      <button class="catalogue__filter" @click="showFilter = true">
        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M12.75 12L3.75 12" stroke="#111D33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M20.25 12L15.75 12" stroke="#111D33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -58,14 +73,20 @@
 </svg>
 
       </button>
+      <FilterModal
+  v-if="showFilter"
+  @close="showFilter = false"
+  @apply="onFilterApply"
+/>
     </div>
 
     <!-- Карточки товаров -->
     <div class="catalogue__grid">
       <div
-        v-for="product in products"
+        v-for="product in filteredProducts"
         :key="product.id"
         class="catalogue__card"
+        @click="router.push(`/product/${product.id}`)"
       >
         <!-- Бейджи -->
         <div class="catalogue__card-badges">
@@ -74,10 +95,15 @@
         </div>
 
         <!-- Лайк -->
-        <button class="catalogue__card-like">
+        <button class="catalogue__card-like"  @click.stop="toggleFavorite(product)">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="none" stroke="#ccc" stroke-width="1.5"/>
-          </svg>
+    <path 
+      d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+      :fill="isFavorite(product.id) ? '#00C27C' : 'none'"
+      :stroke="isFavorite(product.id) ? '#00C27C' : '#ccc'"
+      stroke-width="1.5"
+    />
+  </svg>
         </button>
 
         <!-- Фото -->
@@ -101,6 +127,15 @@
         </div>
       </div>
     </div>
+    <div v-if="filteredProducts.length === 0" class="catalogue__empty">
+  <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
+    <path d="M10.5 19.5C15.1944 19.5 19 15.6944 19 11C19 6.30558 15.1944 2.5 10.5 2.5C5.80558 2.5 2 6.30558 2 11C2 15.6944 5.80558 19.5 10.5 19.5Z" stroke="#E2E8F0" stroke-width="1.5"/>
+    <path d="M21.5 21.5L17 17" stroke="#E2E8F0" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M10.5 8V14M7.5 11H13.5" stroke="#E2E8F0" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>
+  <p class="catalogue__empty-title">Ничего не найдено</p>
+  <p class="catalogue__empty-text">Попробуйте изменить параметры фильтра</p>
+</div>
 
     <!-- Bottom Nav -->
     <div class="catalogue__nav">
@@ -108,8 +143,14 @@
         v-for="tab in tabs"
         :key="tab.id"
         class="catalogue__nav-btn"
-        :class="{ active: activeTab === tab.id }"
-        @click="activeTab = tab.id"
+        :class="{ active: route.name === tab.id }"
+        @click="
+    tab.id === 'favorites' ? router.push('/favorites') :
+    tab.id === 'purchases' ? router.push('/purchases') :
+    tab.id === 'profile' ? router.push('/profile') :
+    tab.id === 'funds' ? router.push('/funds') :
+    activeTab = tab.id
+  "
       >
         <span v-html="tab.icon" />
         <span>{{ tab.name }}</span>
@@ -117,20 +158,70 @@
     </div>
 
   </div>
+  </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useCatalogueStore } from '../../stores/catalogueStore'
+import FilterModal from '../../components/FilterModal.vue'
 
+const showFilter = ref(false)
+const route = useRoute()
 const router = useRouter()
 const store = useCatalogueStore()
 const { products, categories, stories, loading, error } = storeToRefs(store)
 
 const activeCategory = ref(null)
 const activeTab = ref('catalogue')
+const filterParams = ref(null)
+
+
+const goToNotifications = () => {
+  router.push('/notifications')
+}
+const filteredProducts = computed(() => {
+  let list = products.value
+
+  if (activeCategory.value) {
+    list = list.filter(p => String(p.category_id) === String(activeCategory.value))
+  }
+
+  if (!filterParams.value) return list
+
+  const f = filterParams.value
+
+  if (f.search) {
+    const q = f.search.toLowerCase().trim()
+    list = list.filter(p => p.name.toLowerCase().includes(q))
+  }
+  if (f.minPrice) {
+    list = list.filter(p => p.price >= Number(f.minPrice))
+  }
+  if (f.maxPrice) {
+    list = list.filter(p => p.price <= Number(f.maxPrice))
+  }
+  if (f.onlyDiscount) {
+    list = list.filter(p => p.discount)
+  }
+  if (f.sort === 'asc') {
+    list = [...list].sort((a, b) => a.price - b.price)
+  } else if (f.sort === 'desc') {
+    list = [...list].sort((a, b) => b.price - a.price)
+  }
+
+  return list
+})
+watch(activeCategory, async (newCat) => {
+  if (newCat) {
+    await store.fetchProducts(newCat)
+    console.log('products:', products.value)
+    console.log('activeCategory:', newCat)
+  }
+})
+console.log('first product:', JSON.stringify(products.value[0]))
 
 onMounted(async () => {
   await store.fetchCategories()
@@ -150,6 +241,10 @@ const activeCategoryName = computed(() => {
 })
 
 const openStory = (i) => router.push(`/stories?index=${i}`)
+
+function onFilterApply(filter) {
+  filterParams.value = filter
+}
 
 const tabs = [
   {
@@ -196,9 +291,57 @@ const tabs = [
 </svg>`
   },
 ]
+
+onMounted(async () => {
+  await store.fetchAll()
+})
+const favorites = ref(JSON.parse(localStorage.getItem('favorites') || '[]'))
+
+function isFavorite(id) {
+  return favorites.value.some(f => f.id === id)
+}
+
+function toggleFavorite(product) {
+  const index = favorites.value.findIndex(f => f.id === product.id)
+  if (index === -1) {
+    favorites.value.push(product)
+  } else {
+    favorites.value.splice(index, 1)
+  }
+  localStorage.setItem('favorites', JSON.stringify(favorites.value))
+}
 </script>
 
 <style scoped>
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 16px;
+}
+
+.skeleton-card {
+  height: 294px;
+  border-radius: 12px;
+  background: linear-gradient(
+    90deg,
+    #f1f1f1 25%,
+    #e7e7e7 50%,
+    #f1f1f1 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
 .catalogue {
   width: 100%;
   min-height: 100vh;
@@ -206,7 +349,8 @@ const tabs = [
   font-family: 'Manrope', sans-serif;
   display: flex;
   flex-direction: column;
-  padding-bottom: 70px;
+  padding-bottom: 120px;
+  overflow-x: hidden;
 }
 
 .catalogue__header {
@@ -376,8 +520,8 @@ const tabs = [
 .catalogue__grid {
   display: grid;
   grid-template-columns: 190px 180px;
-  gap: 12px;
-  padding: 0 16px;
+  gap: 1px;
+  padding: 0 12px;
   margin: 0 auto;
   width: fit-content;
 }
@@ -388,7 +532,8 @@ const tabs = [
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 8px;
+  padding: 12px;
+  margin-top: 10px;
   gap: 16px;
   width: 177px;
   height: 294px;
@@ -439,7 +584,6 @@ const tabs = [
   height: 48px;
 }
 
-/* Цены */
 .catalogue__card-prices {
   display: flex;
   flex-direction: row;
@@ -463,8 +607,6 @@ const tabs = [
   text-decoration: line-through;
   color: #848484;
 }
-
-/* Локация */
 .catalogue__card-location {
   display: flex;
   flex-direction: row;
@@ -515,15 +657,39 @@ const tabs = [
   width: 16px;
   height: 16px;
 }
-/* Bottom Nav */
+.catalogue__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  gap: 12px;
+  width: 100%;
+}
+
+.catalogue__empty-title {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: #111D33;
+  margin: 0;
+}
+
+.catalogue__empty-text {
+  font-family: 'Manrope', sans-serif;
+  font-size: 13px;
+  color: #888;
+  text-align: center;
+  margin: 0;
+}
 .catalogue__nav {
   position: fixed;
-  bottom: 34px;
+  bottom: 4px;
   left: 50%;
   transform: translateX(-50%);
   width: 343px;
   height: 72px;
-  background: rgba(255, 255, 255, 0.319);
+  background: rgba(255, 255, 255, 0.8);
   box-shadow: 0px 16px 16px -4px rgba(0, 0, 0, 0.04);
   backdrop-filter: blur(4px);
   border-radius: 32px;
@@ -534,7 +700,6 @@ const tabs = [
   z-index: 100;
   box-sizing: border-box;
 }
-
 .catalogue__nav-btn {
   display: flex;
   flex-direction: column;

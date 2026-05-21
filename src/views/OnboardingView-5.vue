@@ -213,6 +213,7 @@ const router = useRouter()
 const goNext = () => {
   router.push('/catalogue')
 }
+
 </script>
 
 <style scoped>
