@@ -194,7 +194,7 @@
     <div class="onboarding__content">
       <h1 class="onboarding__title">Начнем?</h1>
       <p class="onboarding__text">
-        Исследуйте ассортимент <strong> Good2Best</strong> — от современных гаджетов до стильной брендовой одежды, делайте  <strong>осознанный выбор,</strong>,
+        Исследуйте ассортимент <strong> 2Gain</strong> — от современных гаджетов до стильной брендовой одежды, делайте  <strong>осознанный выбор,</strong>,
         поддерживайте экологию и участвуйте  <strong>в добрых делах!</strong>
       </p>
     </div>

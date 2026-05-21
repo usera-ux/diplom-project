@@ -507,7 +507,7 @@
               <circle cx="12" cy="12" r="4" stroke="#00C27C" stroke-width="1.5"/>
               <circle cx="17.5" cy="6.5" r="1" fill="#00C27C"/>
             </svg>
-            <span>good2best.app</span>
+            <span>2gain.app</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-left:auto">
               <path d="M9 18l6-6-6-6" stroke="#BABABA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -658,6 +658,8 @@ function startReserveTimer(savedAt) {
   display: flex;
   flex-direction: column;
   padding-bottom: 100px;
+    max-width: 390px;
+  margin: 0 auto;
 }
 
 /* Header */
@@ -911,6 +913,8 @@ function startReserveTimer(savedAt) {
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
+    max-width: 400px;
+  margin: 0 auto;
 }
 
 .info-sheet__handle {

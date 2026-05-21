@@ -211,6 +211,8 @@ onMounted(async () => {
   background: #fff;
   font-family: 'Manrope', sans-serif;
   padding-bottom: 160px;
+    max-width: 390px;
+  margin: 0 auto;
 }
 
 /* ── Header ── */

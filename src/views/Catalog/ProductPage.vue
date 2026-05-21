@@ -21,7 +21,7 @@
       </button>
       <span class="product__header-title">{{ shortName }}</span>
 
-      <div class="product__header-right">
+      <div class="product__header-right" @click="goToMyhelp">
         <button class="product__header-btn">
          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M11.25 12V1.5" stroke="#111D33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -44,7 +44,7 @@
     <!-- Image block -->
     <div class="product__image-wrap">
       <div class="product__gallery">
-        <button class="product__wishlist" @click="isWishlisted = !isWishlisted">
+        <button class="product__wishlist" @click="toggleFavourite(product)">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
               :fill="isWishlisted ? '#00C27C' : 'none'"
@@ -139,7 +139,7 @@
       <div class="product__section" v-if="product.fund_name">
         <h3 class="product__section-title">Помощь фонду</h3>
         <div class="product__fund">
-          <div class="product__fund-top">
+          <div class="product__fund-top" @click="goToFond">
             <div class="product__fund-logo">
               <img
                 v-if="product.fund_logo"
@@ -542,6 +542,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useCatalogueStore } from '../../stores/catalogueStore'
 import { supabase } from '../../services/supabase'
 import { storeToRefs } from 'pinia'
+import { useFavourites } from '../../composables/useFavourites'
 
 const route  = useRoute()
 const router = useRouter()
@@ -549,7 +550,6 @@ const store  = useCatalogueStore()
 
 const product       = ref(null)
 const currentSlide  = ref(0)
-const isWishlisted  = ref(false)
 const descExpanded  = ref(false)
 const reservedCount = ref(0)
 
@@ -557,6 +557,8 @@ const reservedCount = ref(0)
 const locations        = ref([])
 const locationsLoading = ref(false)
 
+const { isWishlisted: isWishlistedFn, toggleFavourite } = useFavourites()
+const isWishlisted = computed(() => product.value ? isWishlistedFn(product.value.id) : false)
 const fetchLocations = async () => {
   locations.value = [
     { id: 1, name: 'ТРЦ Forum', address: 'г. Алматы, пр. Достык 111' },
@@ -579,6 +581,11 @@ const fetchLocations = async () => {
 }
 // ────────────────────────────────────────────────────────────────────────────
 
+const goToFond = () => {
+  if (product.value?.fund_id) {
+    router.push(`/fund/${product.value.fund_id}`)
+  }
+}
 const _tx = ref(0)
 const touchStart = (e) => { _tx.value = e.touches[0].clientX }
 const touchEnd   = (e) => {
@@ -639,7 +646,7 @@ const onReserve = () => {
     // Через 3 сек — подтверждение менеджера (зелёный таймер)
     confirmTimeout = setTimeout(() => {
       reserveStatus.value = 'confirmed'
-      timerSeconds.value  = 59 * 60
+      timerSeconds.value  = 1 * 60
       clearInterval(timerInterval)
       timerInterval = setInterval(() => {
         if (timerSeconds.value > 0) {
@@ -658,6 +665,9 @@ const onReserve = () => {
 }
 const goToNotifications = () => {
   router.push('/notifications')
+}
+const goToMyhelp = () => {
+  router.push('/my-help')
 }
 const onCancel = async () => {
   if (purchaseId.value) {
@@ -714,6 +724,7 @@ onUnmounted(() => {
   clearInterval(timerInterval)
   clearTimeout(confirmTimeout)
 })
+
 </script>
 
 <style scoped>
@@ -738,6 +749,8 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
+    max-width: 400px;
+  margin: 0 auto;
 }
 
 /* Header */

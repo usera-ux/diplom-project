@@ -752,6 +752,12 @@ function startReserveTimer(savedAt) {
       clearInterval(reserveInterval)
       isSaved.value = false
       reserveExpired.value = true // 👈 помечаем что резерв истёк
+      const raw = JSON.parse(localStorage.getItem('favorites') || '[]')
+  const itemData = raw.find(i => String(i.id) === String(route.params.id))
+
+  if (itemData) {
+    addToPurchases(itemData, 'sold')
+  }
     }
   }
 
@@ -781,27 +787,32 @@ function statusLabel(status) {
 async function saveItem() {
   const raw = JSON.parse(localStorage.getItem('favorites') || '[]')
   const idx = raw.findIndex(i => String(i.id) === String(route.params.id))
+
   if (idx !== -1) {
     const chosenFund = funds.value.find(f => f.id === selectedFundId.value) || null
-    const savedAt = new Date().toISOString() // 👈 добавь
-    raw[idx] = {
+    const savedAt = new Date().toISOString()
+
+    const updatedItem = {
       ...raw[idx],
       deliveryMethod: selectedDelivery.value?.name || raw[idx].deliveryMethod,
       soldAt: selectedDate.value || raw[idx].soldAt,
       isAnonymous: isAnonymous.value,
-      fundId:   chosenFund?.id   || null,
+      fundId: chosenFund?.id || null,
       fundName: chosenFund?.name || null,
-      fund:     !!chosenFund,
-      savedAt, // 👈 добавь
+      fund: !!chosenFund,
+      savedAt,
     }
+
+    raw[idx] = updatedItem
     localStorage.setItem('favorites', JSON.stringify(raw))
-    
-    // 👈 вместо router.back():
+
+    // 👇 ДОБАВЛЯЕМ В PURCHASES как reserved
+    addToPurchases(updatedItem, 'reserved')
+
     isSaved.value = true
     startReserveTimer(savedAt)
   }
 }
-
 function deleteItem() {
   const raw = JSON.parse(localStorage.getItem('favorites') || '[]')
   const filtered = raw.filter(i => String(i.id) !== String(route.params.id))
@@ -835,6 +846,27 @@ const priceHistory = computed(() => {
   }
   return history
 })
+function addToPurchases(itemData, status) {
+  const raw = JSON.parse(localStorage.getItem('purchases') || '[]')
+
+  const exists = raw.find(i => String(i.id) === String(itemData.id))
+
+  const newItem = {
+    ...itemData,
+    purchaseStatus: status, // reserved | sold
+    updatedAt: new Date().toISOString()
+  }
+
+  if (exists) {
+    const updated = raw.map(i =>
+      String(i.id) === String(itemData.id) ? newItem : i
+    )
+    localStorage.setItem('purchases', JSON.stringify(updated))
+  } else {
+    raw.push(newItem)
+    localStorage.setItem('purchases', JSON.stringify(raw))
+  }
+}
 </script>
 
 <style scoped>
@@ -849,6 +881,8 @@ const priceHistory = computed(() => {
   display: flex;
   flex-direction: column;
   padding-bottom: 100px;
+    max-width: 390px;
+  margin: 0 auto;
 }
 
 /* Header */

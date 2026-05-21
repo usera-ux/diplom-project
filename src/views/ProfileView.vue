@@ -175,6 +175,8 @@ const onLogout = () => { showLogoutModal.value = true }
   background: #fff;
   font-family: 'Manrope', sans-serif;
   padding-bottom: 100px;
+    max-width: 390px;
+  margin: 0 auto;
 }
 
 .profile__header {

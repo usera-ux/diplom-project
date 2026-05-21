@@ -756,6 +756,8 @@ function onTouchEnd(e) {
   font-family: 'Manrope', sans-serif;
   overflow: hidden;
   animation: fadeIn 0.35s ease both;
+    max-width: 400px;
+  margin: 0 auto;
 }
 
 @keyframes fadeIn {

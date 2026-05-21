@@ -77,6 +77,8 @@ onMounted(async () => {
   background: #fff;
   font-family: 'Manrope', sans-serif;
   padding-bottom: 80px;
+    max-width: 390px;
+  margin: 0 auto;
 }
 
 .funds__header {

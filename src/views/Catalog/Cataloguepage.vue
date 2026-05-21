@@ -10,7 +10,7 @@
     <div class="catalogue__header">
   <div style="width: 24px;" />   <!-- пустышка слева для баланса -->
   <h1 class="catalogue__title">Каталог</h1>
-  <button class="catalogue__bell" @click="goToNotifications">
+  <button class="catalogue__bell" @click="goToMyHelp">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M11.25 12V1.5" stroke="#111D33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M8.25 4.5L11.25 1.5L14.25 4.5" stroke="#111D33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -182,6 +182,9 @@ const filterParams = ref(null)
 const goToNotifications = () => {
   router.push('/notifications')
 }
+const goToMyHelp = () => {
+  router.push('/my-help')
+}
 const filteredProducts = computed(() => {
   let list = products.value
 
@@ -313,6 +316,10 @@ function toggleFavorite(product) {
 </script>
 
 <style scoped>
+.catalogue {
+  max-width: 390px;
+  margin: 0 auto;
+}
 .skeleton-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

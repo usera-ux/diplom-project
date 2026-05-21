@@ -289,6 +289,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
+import { useFavourites } from '../composables/useFavourites'
 
 
 const favorites = ref([])

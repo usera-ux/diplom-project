@@ -544,9 +544,19 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCatalogueStore } from '../stores/catalogueStore'
 import { supabase } from '../services/supabase'
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { auth } from '../services/firebase'          // ← добавь
+import { onAuthStateChanged } from 'firebase/auth'   // ← добавь
 
+// ...
 
+onMounted(() => {
+  onAuthStateChanged(auth, (user) => {
+    isAuthorized.value = !!user
+    if (user) {
+      store.fetchPurchases().then(initTimers)
+    }
+  })
+})
 const router = useRouter()
 const store = useCatalogueStore()
 const activeTab = ref('all')
@@ -556,16 +566,6 @@ const isAuthorized = ref(false)
 const timers = ref({})
 const intervals = {}
 
-
-onMounted(() => {
-  const auth = getAuth()
-  onAuthStateChanged(auth, (user) => {
-    isAuthorized.value = !!user
-    if (isAuthorized.value) {
-      store.fetchPurchases().then(() => initTimers())
-    }
-  })
-})
 
 onUnmounted(() => {
   Object.values(intervals).forEach(clearInterval)
@@ -676,6 +676,8 @@ const navTabs = [
   display: flex;
   flex-direction: column;
   padding-bottom: 100px;
+    max-width: 390px;
+  margin: 0 auto;
 }
 
 .purchases__header {

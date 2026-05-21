@@ -179,9 +179,8 @@ const totalAmount = computed(() => {
 function fundInitials(name) {
   return name.slice(0, 3).toUpperCase()
 }
-
-function downloadReport() {
-  // TODO: реализовать скачивание отчёта
+const downloadReport = () => {
+  router.push('/language')
 }
 </script>
 
@@ -197,6 +196,8 @@ function downloadReport() {
   display: flex;
   flex-direction: column;
   padding-bottom: 40px;
+    max-width: 390px;
+  margin: 0 auto;
 }
 
 /* Header */

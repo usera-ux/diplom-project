@@ -479,7 +479,8 @@ function confirmClear() {
   min-height: 100vh;
   background: #fff;
   font-family: 'Manrope', sans-serif;
-  padding-bottom: 40px;
+  padding-bottom: 40px;  max-width: 390px;
+  margin: 0 auto;
 }
 
 .notifications__header {
