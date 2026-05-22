@@ -1253,6 +1253,8 @@ function addToPurchases(itemData, status) {
   width: 100%;
   max-height: 85vh;
   overflow-y: auto;
+    max-width: 400px;
+  margin: 0 auto;
 }
 .sheet__handle {
   width: 36px;

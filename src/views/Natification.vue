@@ -406,6 +406,8 @@ function confirmClear() {
   border-radius: 20px 20px 0 0;
   padding: 12px 16px 40px;
   width: 100%;
+    max-width: 400px;
+  margin: 0 auto;
 }
 
 .sheet__handle {
