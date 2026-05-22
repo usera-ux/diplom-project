@@ -1204,6 +1204,8 @@ function addToPurchases(itemData, status) {
   display: flex;
   gap: 10px;
   align-items: center;
+  max-width: 390px;
+  margin: 0 auto;
 }
 .product__save-btn {
   flex: 1;

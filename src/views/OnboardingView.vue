@@ -187,6 +187,8 @@ const goNext = () => {
   overflow: hidden;
   font-family: 'Manrope', sans-serif;
   animation: fadeIn 0.5s ease both;
+   max-width: 390px;
+  margin: 0 auto;
 }
 
 @keyframes fadeIn {

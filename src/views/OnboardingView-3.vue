@@ -273,6 +273,8 @@ const goNext = () => { router.push('/onboarding/4') }
   overflow: hidden;
   font-family: 'Manrope', sans-serif;
   animation: fadeIn 0.45s ease both;
+   max-width: 390px;
+  margin: 0 auto;
 }
 
 @keyframes fadeIn {

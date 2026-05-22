@@ -42,6 +42,8 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+   max-width: 390px;
+  margin: 0 auto;
 }
 
 .logo {
