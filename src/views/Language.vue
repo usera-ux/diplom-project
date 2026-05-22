@@ -159,6 +159,8 @@ const goBack = () => {
   flex-direction: column;
   justify-content: space-between;
   padding: 32px 20px calc(24px + env(safe-area-inset-bottom));
+  max-width: 390px;
+  margin: 0 auto;
 }
 
 .coming__content {

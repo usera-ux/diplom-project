@@ -164,6 +164,8 @@ function apply() {
   gap: 16px;
   font-family: 'Manrope', sans-serif;
   animation: slideUp 0.3s ease;
+  max-width: 400px;
+  margin: 0 auto;
 }
 
 @keyframes slideUp {

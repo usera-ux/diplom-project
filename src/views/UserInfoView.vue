@@ -156,6 +156,8 @@ const onSave = async () => {
   font-family: 'Manrope', sans-serif;
   display: flex;
   flex-direction: column;
+  max-width: 390px;
+  margin: 0 auto;
 }
 
 .userinfo__header {

@@ -109,6 +109,8 @@ const faqs = [
   flex-direction: column;
   background: #fff;
   font-family: 'Manrope', sans-serif;
+  max-width: 390px;
+  margin: 0 auto;
 }
 
 /* ── Header ── */
